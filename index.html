@@ -105,6 +105,7 @@
         font-weight: 800;
       }
 
+      /* Styles for typing animation */
       header p.role {
         color: var(--accent);
         font-size: 1.25rem;
@@ -116,6 +117,11 @@
         width: 0;
         animation: typing 3s steps(30, end) forwards,
           blink 0.75s step-end infinite;
+      }
+
+      /* เมื่อการพิมพ์เสร็จสิ้น ให้ลบเส้นที่กระพริบออก */
+      header p.role.typed-done {
+        border-right: none;
       }
 
       @keyframes typing {
@@ -402,6 +408,22 @@
         { threshold: 0.1 }
       );
       sections.forEach((section) => observer.observe(section));
+
+      // Remove typing cursor (blinking line) after typing animation finishes for all typing elements
+      // Select all p.role elements within the header
+      const typingElements = document.querySelectorAll('header p.role');
+      
+      if (typingElements) {
+        typingElements.forEach(element => {
+          element.addEventListener('animationend', (event) => {
+            // Check if the animation that ended is the 'typing' animation
+            if (event.animationName === 'typing') {
+              // Apply a class to the element to remove the border
+              element.classList.add('typed-done');
+            }
+          });
+        });
+      }
     </script>
   </body>
 </html>
