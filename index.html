@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Techin Inthep</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0f172a;
+        --fg: #f8fafc;
+        --accent: #38bdf8;
+        --muted: #94a3b8;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--fg);
+        font-family: "Inter", sans-serif;
+        line-height: 1.75;
+        position: relative;
+        overflow-x: hidden;
+        cursor: none;
+      }
+
+      nav {
+        background-color: rgba(15, 23, 42, 0.9);
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 999;
+        display: flex;
+        justify-content: center;
+        padding: 1rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        animation: slideDown 0.5s ease-out;
+      }
+
+      nav ul {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      nav a {
+        color: var(--muted);
+        font-family: "Fira Code", monospace;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+      }
+
+      nav a:hover {
+        color: var(--accent);
+      }
+
+      header {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 6rem 2rem 4rem;
+        max-width: 900px;
+        margin: auto;
+        animation: fadeInUp 1s ease;
+        z-index: 1;
+      }
+
+      header::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        top: -100px;
+        left: -100px;
+        background: radial-gradient(
+          circle,
+          rgba(56, 189, 248, 0.2),
+          transparent 70%
+        );
+        z-index: 0;
+        pointer-events: none;
+        transform: rotate(45deg);
+      }
+
+      header h1 {
+        font-size: 3rem;
+        color: var(--fg);
+        font-weight: 800;
+      }
+
+      header p.role {
+        color: var(--accent);
+        font-size: 1.25rem;
+        margin: 1rem 0;
+        font-family: "Fira Code", monospace;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: 2px solid var(--accent);
+        width: 0;
+        animation: typing 3s steps(30, end) forwards,
+          blink 0.75s step-end infinite;
+      }
+
+      @keyframes typing {
+        to {
+          width: 100%;
+        }
+      }
+
+      @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
+
+      header p.desc {
+        color: var(--muted);
+        font-size: 1.1rem;
+        max-width: 600px;
+      }
+
+      main {
+        max-width: 900px;
+        margin: auto;
+        padding: 2rem;
+      }
+
+      section {
+        margin-bottom: 4rem;
+        scroll-margin-top: 100px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.8s ease;
+      }
+
+      section.reveal {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        color: var(--accent);
+        margin-bottom: 1rem;
+        font-family: "Fira Code", monospace;
+        border-left: 4px solid var(--accent);
+        padding-left: 0.5rem;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 1rem;
+      }
+
+      ul li::before {
+        content: "▹ ";
+        color: var(--accent);
+      }
+
+      ul li {
+        margin-bottom: 0.5rem;
+        color: var(--fg);
+        transition: transform 0.2s ease;
+      }
+
+      ul li:hover {
+        transform: translateX(4px);
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: all 0.3s;
+      }
+
+      a:hover {
+        text-decoration: underline;
+        color: #60a5fa;
+        background: rgba(56, 189, 248, 0.1);
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-100%);
+        }
+
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .cursor-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: -10px;
+        height: -10px;
+        border: 2px solid #38bdf8;
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        z-index: 9999;
+        mix-blend-mode: difference;
+        will-change: transform;
+        box-shadow: 0 0 15px 15px rgba(56, 191, 248, 0.388),
+          0 0 20px 6px rgba(56, 189, 248, 0.4),
+          0 0 40px 10px rgba(56, 189, 248, 0.2);
+        background: transparent;
+        opacity: 0.8;
+      }
+
+      .cursor-ring.hovered {
+        border-color: #60a5fa;
+        box-shadow: 0 0 12px 4px rgba(96, 165, 250, 0.9),
+          0 0 28px 10px rgba(96, 165, 250, 0.6),
+          0 0 56px 20px rgba(96, 165, 250, 0.3);
+        transform: translate(-50%, -50%) scale(1.6);
+        opacity: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="cursor-ring"></div>
+    <div class="cursor-dot"></div>
+
+    <nav>
+      <ul>
+        <li><a href="#skills">/skills</a></li>
+        <li><a href="#projects">/projects</a></li>
+        <li><a href="#contact">/contact</a></li>
+      </ul>
+    </nav>
+
+    <header>
+      <p class="role">Hi, my name is</p>
+      <h1>Techin Inthep</h1>
+      <p class="role">Web Developer & Robotic EV3 Enthusiast</p>
+      <p class="desc">
+        I like to programming and make robot. I'm passionate about building
+        useful tools with code and robotics. 🚀
+      </p>
+    </header>
+
+    <main>
+      <section id="skills">
+        <h2>// Skills</h2>
+        <ul>
+          <li>Python</li>
+          <li>JavaScript</li>
+          <li>HTML</li>
+          <li>CSS</li>
+        </ul>
+      </section>
+
+      <section id="projects">
+        <h2>// Projects</h2>
+        <ul>
+          <li>
+            <a
+              href="https://latte114.github.io/Wisa_Bank/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Wisa Bank - School Banking System</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://latte114.github.io/coffee/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Coffee Cupping - For My Dad</a
+            >
+          </li>
+        </ul>
+      </section>
+
+      <section id="contact">
+        <h2>// Contact</h2>
+        <ul>
+          <li>
+            Email:
+            <a href="mailto:latte1332011@gmail.com">latte1332011@gmail.com</a>
+          </li>
+          <li>
+            Instagram:
+            <a
+              href="https://www.instagram.com/lattetha/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >@lattetha</a
+            >
+          </li>
+          <li>
+            Facebook:
+            <a
+              href="https://www.facebook.com/latte.tha/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >latte.tha</a
+            >
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy;Techin Inthep</p>
+    </footer>
+
+    <script>
+      const cursorDot = document.querySelector(".cursor-dot");
+      const cursorRing = document.querySelector(".cursor-ring");
+
+      let mouseX = 0,
+        mouseY = 0;
+      let ringX = 0,
+        ringY = 0;
+      const lerpAmount = 0.15;
+
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        cursorDot.style.left = mouseX + "px";
+        cursorDot.style.top = mouseY + "px";
+      });
+
+      function animate() {
+        ringX += (mouseX - ringX) * lerpAmount;
+        ringY += (mouseY - ringY) * lerpAmount;
+
+        cursorRing.style.left = ringX + "px";
+        cursorRing.style.top = ringY + "px";
+
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      const hoverElements = document.querySelectorAll(
+        "a, button, nav a, ul li"
+      );
+      hoverElements.forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          cursorRing.classList.add("hovered");
+        });
+        el.addEventListener("mouseleave", () => {
+          cursorRing.classList.remove("hovered");
+        });
+      });
+
+      // Scroll reveal
+      const sections = document.querySelectorAll("section");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("reveal");
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      sections.forEach((section) => observer.observe(section));
+    </script>
+  </body>
+</html>
