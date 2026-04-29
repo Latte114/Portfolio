@@ -1,19 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Techin Inthep</title>
+    <title>Techin Inthep | Engineering Portfolio</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;600;800&display=swap"
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
+
     <style>
+      /* === Sci-Fi Engineering Theme === */
       :root {
-        --bg: #0f172a;
-        --fg: #f8fafc;
-        --accent: #38bdf8;
-        --muted: #94a3b8;
+        --bg: #07090f; /* สีเทาดำลึกแบบอวกาศ */
+        --fg: #e2e8f0;
+        --accent: #ff6d00; /* สีส้ม Tech Orange */
+        --accent-hover: #ff8e3c;
+        --secondary: #00ffcc; /* สีเขียวเซนเซอร์ */
+        --muted: #64748b;
+        --card-bg: rgba(13, 17, 26, 0.85);
+        --border: rgba(255, 109, 0, 0.3);
       }
 
       * {
@@ -21,409 +31,749 @@
         padding: 0;
         box-sizing: border-box;
       }
-
       html {
         scroll-behavior: smooth;
       }
 
       body {
+        font-family: "Inter", sans-serif;
         background-color: var(--bg);
         color: var(--fg);
-        font-family: "Inter", sans-serif;
-        line-height: 1.75;
-        position: relative;
+        line-height: 1.7;
         overflow-x: hidden;
-        cursor: none;
+        cursor: none; /* ใช้ Sci-fi Cursor */
       }
 
+      /* === Blueprint Grid Background === */
+      .blueprint-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-image:
+          linear-gradient(rgba(255, 109, 0, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 109, 0, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px; /* ขนาดช่องตาราง */
+        z-index: -2;
+        pointer-events: none;
+      }
+
+      /* แสงออร่าตรงกลางจอ */
+      .glow-bg {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 60vw;
+        height: 60vh;
+        background: radial-gradient(
+          circle,
+          rgba(255, 109, 0, 0.05) 0%,
+          transparent 60%
+        );
+        transform: translate(-50%, -50%);
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* === Targeting Box Cursor (Sci-Fi Style) === */
+      .cursor-dot {
+        width: 6px;
+        height: 6px;
+        background-color: var(--accent);
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 10000;
+        box-shadow: 0 0 10px var(--accent);
+        will-change: transform;
+        border-radius: 1px; /* เป็นสี่เหลี่ยมเล็กๆ */
+      }
+
+      .cursor-target {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--border);
+        pointer-events: none;
+        z-index: 9999;
+        transition:
+          width 0.2s,
+          height 0.2s,
+          border-color 0.2s,
+          transform 0.1s;
+        will-change: transform;
+      }
+      /* เส้นเล็งมุมกรอบ */
+      .cursor-target::before,
+      .cursor-target::after {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border: 2px solid transparent;
+      }
+      .cursor-target::before {
+        top: -1px;
+        left: -1px;
+        border-top-color: var(--accent);
+        border-left-color: var(--accent);
+      }
+      .cursor-target::after {
+        bottom: -1px;
+        right: -1px;
+        border-bottom-color: var(--accent);
+        border-right-color: var(--accent);
+      }
+
+      .cursor-target.hovered {
+        width: 50px;
+        height: 50px;
+        border-color: rgba(255, 109, 0, 0.1);
+        background-color: rgba(255, 109, 0, 0.05);
+        transform: rotate(45deg); /* หมุนกรอบเวลา Hover โคตรเท่ */
+      }
+
+      /* === Navigation (Tech Bar) === */
       nav {
-        background-color: rgba(15, 23, 42, 0.9);
         position: fixed;
         top: 0;
         width: 100%;
-        z-index: 999;
+        background: rgba(7, 9, 15, 0.9);
+        border-bottom: 1px solid var(--border);
         display: flex;
         justify-content: center;
+        align-items: center;
         padding: 1rem;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-        animation: slideDown 0.5s ease-out;
+        z-index: 999;
       }
-
       nav ul {
         display: flex;
-        gap: 2rem;
+        gap: 3rem;
         list-style: none;
       }
-
       nav a {
         color: var(--muted);
         font-family: "Fira Code", monospace;
         text-decoration: none;
-        font-size: 0.95rem;
-        transition: color 0.3s ease;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: color 0.3s;
       }
-
-      nav a:hover {
+      nav a:hover,
+      nav a.active {
         color: var(--accent);
+        text-shadow: 0 0 8px rgba(255, 109, 0, 0.5);
       }
 
-      header {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        min-height: 100vh;
-        padding: 6rem 2rem 4rem;
-        max-width: 900px;
-        margin: auto;
-        animation: fadeInUp 1s ease;
-        z-index: 1;
-      }
-
-      header::before {
-        content: "";
-        position: absolute;
-        width: 300px;
-        height: 300px;
-        top: -100px;
-        left: -100px;
-        background: radial-gradient(
-          circle,
-          rgba(56, 189, 248, 0.2),
-          transparent 70%
-        );
-        z-index: 0;
-        pointer-events: none;
-        transform: rotate(45deg);
-      }
-
-      header h1 {
-        font-size: 3rem;
-        color: var(--fg);
-        font-weight: 800;
-      }
-
-      /* Styles for typing animation */
-      header p.role {
-        color: var(--accent);
-        font-size: 1.25rem;
-        margin: 1rem 0;
-        font-family: "Fira Code", monospace;
-        white-space: nowrap;
-        overflow: hidden;
-        border-right: 2px solid var(--accent);
-        width: 0;
-        animation: typing 3s steps(30, end) forwards,
-          blink 0.75s step-end infinite;
-      }
-
-      /* เมื่อการพิมพ์เสร็จสิ้น ให้ลบเส้นที่กระพริบออก */
-      header p.role.typed-done {
-        border-right: none;
-      }
-
-      @keyframes typing {
-        to {
-          width: 100%;
-        }
-      }
-
-      @keyframes blink {
-        50% {
-          border-color: transparent;
-        }
-      }
-
-      header p.desc {
-        color: var(--muted);
-        font-size: 1.1rem;
-        max-width: 600px;
-      }
-
+      /* === Layout & Typography === */
       main {
-        max-width: 900px;
+        max-width: 1000px;
         margin: auto;
-        padding: 2rem;
+        padding: 0 2rem;
       }
-
       section {
-        margin-bottom: 4rem;
-        scroll-margin-top: 100px;
+        padding: 6rem 0 2rem;
         opacity: 0;
         transform: translateY(20px);
-        transition: all 0.8s ease;
+        transition: all 0.6s ease-out;
       }
-
       section.reveal {
         opacity: 1;
         transform: translateY(0);
       }
 
       h2 {
-        font-size: 1.5rem;
-        color: var(--accent);
-        margin-bottom: 1rem;
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
         font-family: "Fira Code", monospace;
-        border-left: 4px solid var(--accent);
-        padding-left: 0.5rem;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        color: var(--fg);
+        letter-spacing: 2px;
+      }
+      h2::before {
+        content: "[SYS.0" counter(section-counter) "] // ";
+        counter-increment: section-counter;
+        color: var(--accent);
+        margin-right: 15px;
+        font-size: 1rem;
+      }
+      h2::after {
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        background: var(--border);
+        margin-left: 20px;
+      }
+      body {
+        counter-reset: section-counter;
       }
 
-      ul {
-        list-style: none;
+      /* === Header / Hero Section === */
+      header {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 2rem;
+        max-width: 1000px;
+        margin: auto;
+      }
+      .terminal-text {
+        color: var(--secondary);
+        font-family: "Fira Code", monospace;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: 1px;
+      }
+      .terminal-text::before {
+        content: "> ";
+      }
+      header h1 {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+      }
+      .highlight {
+        color: var(--accent);
+      }
+      header p.desc {
+        color: var(--muted);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin-top: 1.5rem;
+        border-left: 2px solid var(--border);
         padding-left: 1rem;
       }
 
-      ul li::before {
-        content: "▹ ";
-        color: var(--accent);
-      }
-
-      ul li {
-        margin-bottom: 0.5rem;
-        color: var(--fg);
-        transition: transform 0.2s ease;
-      }
-
-      ul li:hover {
-        transform: translateX(4px);
-      }
-
-      a {
+      /* === Buttons (Sci-Fi Chamfered) === */
+      .btn {
+        display: inline-block;
+        padding: 0.8rem 2rem;
+        margin-top: 2.5rem;
+        font-family: "Fira Code", monospace;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
         color: var(--accent);
         text-decoration: none;
+        cursor: none;
+        background: rgba(255, 109, 0, 0.05);
+        border: 1px solid var(--accent);
+        /* ตัดมุมปุ่ม */
+        clip-path: polygon(
+          10px 0,
+          100% 0,
+          100% calc(100% - 10px),
+          calc(100% - 10px) 100%,
+          0 100%,
+          0 10px
+        );
+        transition: all 0.3s ease;
+      }
+      .btn:hover {
+        background: rgba(255, 109, 0, 0.2);
+        box-shadow: inset 0 0 15px rgba(255, 109, 0, 0.3);
+      }
+
+      /* === Skills Badges === */
+      .skills-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+      }
+      .skill-category h3 {
+        color: var(--fg);
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        font-family: "Fira Code", monospace;
+      }
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .badge {
+        font-family: "Fira Code", monospace;
+        font-size: 0.85rem;
+        color: var(--muted);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.5rem 1rem;
+        background: var(--card-bg);
+        clip-path: polygon(
+          8px 0,
+          100% 0,
+          100% calc(100% - 8px),
+          calc(100% - 8px) 100%,
+          0 100%,
+          0 8px
+        );
         transition: all 0.3s;
       }
-
-      a:hover {
-        text-decoration: underline;
-        color: #60a5fa;
-        background: rgba(56, 189, 248, 0.1);
-        padding: 0.2rem 0.4rem;
-        border-radius: 4px;
+      .badge:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(255, 109, 0, 0.1);
       }
 
+      /* === Project Cards (Sci-Fi Data Panels) === */
+      .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+      }
+      .project-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        /* ตัดมุมการ์ด */
+        clip-path: polygon(
+          20px 0,
+          100% 0,
+          100% calc(100% - 20px),
+          calc(100% - 20px) 100%,
+          0 100%,
+          0 20px
+        );
+        transition: all 0.3s ease;
+      }
+      .project-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent);
+        box-shadow: 0 10px 30px rgba(255, 109, 0, 0.15);
+      }
+
+      .project-img {
+        width: 100%;
+        height: 200px;
+        background: repeating-linear-gradient(
+          45deg,
+          #111520,
+          #111520 10px,
+          #171c28 10px,
+          #171c28 20px
+        ); /* ลายแถบคำเตือนสีเทา */
+        border-bottom: 1px solid var(--border);
+        position: relative;
+      }
+
+      .project-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .project-content h3 {
+        font-size: 1.3rem;
+        color: var(--fg);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+      }
+      .tech-stack {
+        font-family: "Fira Code", monospace;
+        font-size: 0.75rem;
+        color: var(--secondary);
+        margin-bottom: 1rem;
+      }
+      .project-desc {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+      }
+
+      .project-links {
+        border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        padding-top: 1rem;
+      }
+      .project-links a {
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-family: "Fira Code", monospace;
+        text-transform: uppercase;
+      }
+      .project-links a:hover {
+        color: var(--fg);
+      }
+
+      /* === Timeline / Awards === */
+      .timeline-item {
+        position: relative;
+        padding-left: 2rem;
+        margin-bottom: 2rem;
+        border-left: 1px solid var(--border);
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -5px;
+        top: 0;
+        width: 9px;
+        height: 9px;
+        background: var(--bg);
+        border: 2px solid var(--accent);
+      }
+      .timeline-item h3 {
+        color: var(--fg);
+        font-size: 1.1rem;
+      }
+      .timeline-item span {
+        color: var(--secondary);
+        font-family: "Fira Code", monospace;
+        font-size: 0.8rem;
+      }
+      .timeline-item p {
+        color: var(--muted);
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      /* === Footer === */
       footer {
         text-align: center;
         padding: 2rem;
         color: var(--muted);
-        font-size: 0.9rem;
-        opacity: 0.8;
+        font-size: 0.8rem;
+        font-family: "Fira Code", monospace;
+        border-top: 1px solid var(--border);
+        margin-top: 4rem;
+        text-transform: uppercase;
       }
 
-      @keyframes slideDown {
-        from {
-          transform: translateY(-100%);
+      /* === Mobile === */
+      @media (max-width: 768px) {
+        .cursor-target,
+        .cursor-dot {
+          display: none !important;
         }
-
-        to {
-          transform: translateY(0);
+        body {
+          cursor: auto;
         }
-      }
-
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
+        nav ul {
+          gap: 1rem;
+          font-size: 0.75rem;
         }
-
-        to {
-          opacity: 1;
-          transform: translateY(0);
+        h2::before {
+          display: none;
         }
-      }
-
-      .cursor-ring {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: -10px;
-        height: -10px;
-        border: 2px solid #38bdf8;
-        border-radius: 50%;
-        pointer-events: none;
-        transform: translate(-50%, -50%);
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        z-index: 9999;
-        mix-blend-mode: difference;
-        will-change: transform;
-        box-shadow: 0 0 15px 15px rgba(56, 191, 248, 0.388),
-          0 0 20px 6px rgba(56, 189, 248, 0.4),
-          0 0 40px 10px rgba(56, 189, 248, 0.2);
-        background: transparent;
-        opacity: 0.8;
-      }
-
-      .cursor-ring.hovered {
-        border-color: #60a5fa;
-        box-shadow: 0 0 12px 4px rgba(96, 165, 250, 0.9),
-          0 0 28px 10px rgba(96, 165, 250, 0.6),
-          0 0 56px 20px rgba(96, 165, 250, 0.3);
-        transform: translate(-50%, -50%) scale(1.6);
-        opacity: 1;
       }
     </style>
   </head>
 
   <body>
-    <div class="cursor-ring"></div>
+    <div class="blueprint-grid"></div>
+    <div class="glow-bg"></div>
+
+    <div class="cursor-target"></div>
     <div class="cursor-dot"></div>
 
     <nav>
-      <ul>
-        <li><a href="#skills">/skills</a></li>
-        <li><a href="#projects">/projects</a></li>
-        <li><a href="#contact">/contact</a></li>
+      <ul id="nav-links">
+        <li><a href="#about" class="active">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Data</a></li>
+        <li><a href="#awards">Logs</a></li>
+        <li><a href="#contact">Comm</a></li>
       </ul>
     </nav>
 
-    <header>
-      <p class="role">Hi, my name is</p>
-      <h1>Techin Inthep</h1>
-      <p class="role">Web Developer & Robotic EV3 Enthusiast</p>
+    <header id="hero">
+      <div class="terminal-text">USER_INIT: TECHIN_INTHEP</div>
+      <h1>Engineering <br /><span class="highlight">The Future.</span></h1>
       <p class="desc">
-        I like to programming and make robot. I'm passionate about building
-        useful tools with code and robotics. 🚀
+        Aspiring engineer from Thailand. Merging software logic with hardware
+        robotics (EV3). Building systems to solve real-world problems and
+        targeting advanced engineering studies in China.
       </p>
+      <div>
+        <a href="#projects" class="btn">Execute Projects.exe</a>
+      </div>
     </header>
 
     <main>
+      <section id="about">
+        <h2>About_Me</h2>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            color: var(--muted);
+          "
+        >
+          <p>
+            My journey into engineering began with LEGO Mindstorms EV3. What
+            started as simply snapping pieces together quickly evolved into a
+            deep fascination with programming autonomous logic. I discovered my
+            passion for bridging the gap between hardware and software—turning
+            lines of code into physical movement.
+          </p>
+          <p>
+            My ultimate goal is to pursue a degree in Engineering in China, a
+            global epicenter for technological innovation and robotics. I am
+            eager to immerse myself in a challenging academic environment, learn
+            from top-tier professors, and build solutions that create real-world
+            impact.
+          </p>
+        </div>
+      </section>
+
       <section id="skills">
-        <h2>// Skills</h2>
-        <ul>
-          <li>Python</li>
-          <li>JavaScript</li>
-          <li>HTML</li>
-          <li>CSS</li>
-        </ul>
+        <h2>System_Specs</h2>
+        <div class="skills-container">
+          <div class="skill-category">
+            <h3>[Software & Logic]</h3>
+            <div class="badges">
+              <div class="badge">Python</div>
+              <div class="badge">JavaScript (ES6+)</div>
+              <div class="badge">HTML5 / CSS3</div>
+              <div class="badge">Git Version Control</div>
+            </div>
+          </div>
+          <div class="skill-category">
+            <h3>[Hardware & Robotics]</h3>
+            <div class="badges">
+              <div class="badge">LEGO Mindstorms EV3</div>
+              <div class="badge">MicroPython</div>
+              <div class="badge">Sensor Integration</div>
+              <div class="badge">Algorithm Design</div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section id="projects">
-        <h2>// Projects</h2>
-        <ul>
-          <li>
-            <a
-              href="https://latte114.github.io/Wisa_Bank/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Wisa Bank - School Banking System</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://latte114.github.io/coffee/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Coffee Cupping - For My Dad</a
-            >
-          </li>
-        </ul>
+        <h2>Project_Data</h2>
+        <div class="project-grid">
+
+          <div class="project-card">
+            <div
+              class="project-img"
+              style="
+                background-image: url(&quot;images/bank.png&quot;);
+                background-size: cover;
+                background-position: center;
+              "
+            ></div>
+            <div class="project-content">
+              <h3>Wisa Bank System</h3>
+              <p class="tech-stack">WEB: HTML/CSS/JS</p>
+              <p class="project-desc">
+                Developed a web-based school banking simulation to digitalize
+                financial data management. Focused on creating an intuitive UI
+                and fast data processing.
+              </p>
+              <div class="project-links">
+                <a href="https://latte114.github.io/Wisa_Bank/" target="_blank"
+                  >[ LAUNCH SITE ]</a
+                >
+                <a
+                  href="https://github.com/latte114/Wisa_Bank"
+                  target="_blank"
+                  style="margin-left: 10px"
+                  >[ SOURCE CODE ]</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div
+              class="project-img"
+              style="
+                background-image: url(&quot;images/cupping.png&quot;);
+                background-size: cover;
+                background-position: center;
+              "
+            ></div>
+            <div cla
+            <div class="project-content">
+              <h3>Coffee Cupping App</h3>
+              <p class="tech-stack">WEB DEV | UI/UX</p>
+              <p class="project-desc">
+                Designed a digital tool to streamline the coffee cupping and
+                evaluation process for my father's business, replacing
+                traditional paper-based logging.
+              </p>
+              <div class="project-links">
+                <a href="https://coffee-chi-three.vercel.app/" target="_blank"
+                  >[ LAUNCH SITE ]</a
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Project 4: Family Business Website -->
+          <div class="project-card">
+            <div
+              class="project-img"
+              style="
+                background-image: url(&quot;images/shop.png&quot;);
+                background-size: cover;
+                background-position: center;
+              "
+            ></div>
+            <div cla
+            <div class="project-content">
+              <h3>Family Shop Platform</h3>
+              <p class="tech-stack">WEB: HTML/CSS/JS</p>
+              <p class="project-desc">
+                Spearheaded the digital transformation for my family's retail
+                business by designing and developing a custom website. Improved
+                online visibility and streamlined the customer experience.
+              </p>
+              <div class="project-links">
+                <a href="https://www.rojroastery.com/" target="_blank"
+                  >[ LAUNCH SITE ]</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="awards">
+        <h2>Achievement_Logs</h2>
+        <div style="margin-top: 1rem">
+          <div class="timeline-item">
+            <h3>10th Place - National WRO Thailand Competition</h3>
+            <span>[ RECORDED: 2025 ]</span>
+            <p>
+              Competed among 100+ teams in the autonomous navigation category,
+              demonstrating advanced sensor programming.
+            </p>
+          </div>
+        </div>
       </section>
 
       <section id="contact">
-        <h2>// Contact</h2>
-        <ul>
-          <li>
-            Email:
-            <a href="mailto:latte1332011@gmail.com">latte1332011@gmail.com</a>
-          </li>
-          <li>
-            Instagram:
-            <a
-              href="https://www.instagram.com/lattetha/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >@lattetha</a
-            >
-          </li>
-          <li>
-            Facebook:
-            <a
-              href="https://www.facebook.com/latte.tha/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >latte.tha</a
-            >
-          </li>
-        </ul>
+        <h2>Comm_Link</h2>
+        <p style="color: var(--muted); margin-bottom: 2rem; max-width: 600px">
+          Currently scanning for university opportunities in Engineering in
+          China. Transmission channel is open. Reach out for inquiries or
+          collaborations.
+        </p>
+        <a href="mailto:latte1332011@gmail.com" class="btn"
+          >Establish Connection</a
+        >
+
+        <div style="margin-top: 2.5rem; display: flex; gap: 2rem">
+          <a
+            href="https://www.instagram.com/lattetha/"
+            target="_blank"
+            style="
+              color: var(--secondary);
+              font-family: &quot;Fira Code&quot;, monospace;
+              text-decoration: none;
+              font-size: 0.85rem;
+            "
+            >[ INSTAGRAM ]</a
+          >
+          <a
+            href="https://www.facebook.com/latte.tha/"
+            target="_blank"
+            style="
+              color: var(--secondary);
+              font-family: &quot;Fira Code&quot;, monospace;
+              text-decoration: none;
+              font-size: 0.85rem;
+            "
+            >[ FACEBOOK ]</a
+          >
+        </div>
       </section>
     </main>
 
     <footer>
-      <p>&copy;Techin Inthep</p>
+      <p>SYS.END // &copy; 2026 TECHIN INTHEP. ALL LOGIC COMPILED.</p>
     </footer>
 
     <script>
+      // 1. Sci-Fi Targeting Cursor
       const cursorDot = document.querySelector(".cursor-dot");
-      const cursorRing = document.querySelector(".cursor-ring");
+      const cursorTarget = document.querySelector(".cursor-target");
 
-      let mouseX = 0,
-        mouseY = 0;
-      let ringX = 0,
-        ringY = 0;
-      const lerpAmount = 0.15;
+      let mouseX = window.innerWidth / 2,
+        mouseY = window.innerHeight / 2;
+      let targetX = mouseX,
+        targetY = mouseY;
 
       document.addEventListener("mousemove", (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-
-        cursorDot.style.left = mouseX + "px";
-        cursorDot.style.top = mouseY + "px";
+        // จุดเล็กวิ่งตามติดเมาส์ 100%
+        cursorDot.style.transform = `translate(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%))`;
       });
 
-      function animate() {
-        ringX += (mouseX - ringX) * lerpAmount;
-        ringY += (mouseY - ringY) * lerpAmount;
+      function animateTargetCursor() {
+        // กรอบเล็งเป้าตามมาแบบลื่นๆ
+        targetX += (mouseX - targetX) * 0.25;
+        targetY += (mouseY - targetY) * 0.25;
 
-        cursorRing.style.left = ringX + "px";
-        cursorRing.style.top = ringY + "px";
+        // ถ้า Hover จะมีการหมุน (rotate) ที่สั่งไว้ใน CSS ให้ออกมาสวยงาม
+        if (cursorTarget.classList.contains("hovered")) {
+          cursorTarget.style.transform = `translate(calc(${targetX}px - 50%), calc(${targetY}px - 50%)) rotate(45deg)`;
+        } else {
+          cursorTarget.style.transform = `translate(calc(${targetX}px - 50%), calc(${targetY}px - 50%)) rotate(0deg)`;
+        }
 
-        requestAnimationFrame(animate);
+        requestAnimationFrame(animateTargetCursor);
       }
-      animate();
+      animateTargetCursor();
 
-      const hoverElements = document.querySelectorAll(
-        "a, button, nav a, ul li"
-      );
-      hoverElements.forEach((el) => {
-        el.addEventListener("mouseenter", () => {
-          cursorRing.classList.add("hovered");
+      // Hover Effect
+      document
+        .querySelectorAll("a, .btn, .project-card, .badge")
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            cursorTarget.classList.add("hovered"),
+          );
+          el.addEventListener("mouseleave", () =>
+            cursorTarget.classList.remove("hovered"),
+          );
         });
-        el.addEventListener("mouseleave", () => {
-          cursorRing.classList.remove("hovered");
-        });
-      });
 
-      // Scroll reveal
+      // 2. Scroll Reveal Animations
       const sections = document.querySelectorAll("section");
-      const observer = new IntersectionObserver(
-        (entries) => {
+      const revealObserver = new IntersectionObserver(
+        (entries, observer) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               entry.target.classList.add("reveal");
+              observer.unobserve(entry.target);
             }
           });
         },
-        { threshold: 0.1 }
+        { threshold: 0.15, rootMargin: "0px 0px -50px 0px" },
       );
-      sections.forEach((section) => observer.observe(section));
+      sections.forEach((section) => revealObserver.observe(section));
 
-      // Remove typing cursor (blinking line) after typing animation finishes for all typing elements
-      // Select all p.role elements within the header
-      const typingElements = document.querySelectorAll('header p.role');
-      
-      if (typingElements) {
-        typingElements.forEach(element => {
-          element.addEventListener('animationend', (event) => {
-            // Check if the animation that ended is the 'typing' animation
-            if (event.animationName === 'typing') {
-              // Apply a class to the element to remove the border
-              element.classList.add('typed-done');
-            }
-          });
+      // 3. Active Nav Link Highlighter
+      const navLinks = document.querySelectorAll("nav a");
+      window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach((section) => {
+          if (scrollY >= section.offsetTop - 150)
+            current = section.getAttribute("id");
         });
-      }
+        if (scrollY < 300) current = "about";
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("href").includes(current))
+            link.classList.add("active");
+        });
+      });
     </script>
   </body>
 </html>
